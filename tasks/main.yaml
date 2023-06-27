@@ -8,6 +8,16 @@
     name: "{{ vm_name }}"
     state: powered-off
 
+- name: Get VM Snapshot Facts
+  vmware_vm_snapshot_facts:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: False
+    datacenter: "{{ datacenter_name }}"
+    name: "{{ vm_name }}"
+  register: snapshot_info
+
 - name: Restore Snapshot
   vmware_vm_snapshot:
     hostname: "{{ vcenter_hostname }}"
@@ -16,8 +26,8 @@
     validate_certs: False
     datacenter: "{{ datacenter_name }}"
     name: "{{ vm_name }}"
-    snapshot_name: "{{ snapshot_name }}"
     state: revert
+    snapshot_name: "{{ snapshot_info.snapshot_list | last }}"
 
 - name: Power On VM
   vmware_guest_powerstate:
