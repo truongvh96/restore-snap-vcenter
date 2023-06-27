@@ -1,0 +1,30 @@
+- name: Power Off VM
+  vmware_guest_powerstate:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: False
+    datacenter: "{{ datacenter_name }}"
+    name: "{{ vm_name }}"
+    state: powered-off
+
+- name: Restore Snapshot
+  vmware_vm_snapshot:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: False
+    datacenter: "{{ datacenter_name }}"
+    name: "{{ vm_name }}"
+    snapshot_name: "{{ snapshot_name }}"
+    state: revert
+
+- name: Power On VM
+  vmware_guest_powerstate:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: False
+    datacenter: "{{ datacenter_name }}"
+    name: "{{ vm_name }}"
+    state: powered-on
