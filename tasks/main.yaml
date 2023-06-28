@@ -7,27 +7,20 @@
     datacenter: "{{ datacenter_name }}"
     name: "{{ vm_name }}"
     state: powered-off
-
-- name: Get VM Snapshot Facts
-  vmware_vm_snapshot_facts:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
-    validate_certs: False
-    datacenter: "{{ datacenter_name }}"
-    name: "{{ vm_name }}"
-  register: snapshot_info
+  delegate_to: localhost
 
 - name: Restore Snapshot
-  vmware_vm_snapshot:
+  community.vmware.vmware_guest_snapshot:
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     validate_certs: False
     datacenter: "{{ datacenter_name }}"
+    folder: "/{{ datacenter_name }}/vm/"
     name: "{{ vm_name }}"
     state: revert
-    snapshot_name: "{{ snapshot_info.snapshot_list | last }}"
+    snapshot_name: " snapshot_name "
+  delegate_to: localhost
 
 - name: Power On VM
   vmware_guest_powerstate:
@@ -38,3 +31,4 @@
     datacenter: "{{ datacenter_name }}"
     name: "{{ vm_name }}"
     state: powered-on
+  delegate_to: localhost
